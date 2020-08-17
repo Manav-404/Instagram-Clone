@@ -11,7 +11,6 @@ const UserSchema = new mongoose.Schema(
       maxlength: 32,
       trim: true,
     },
-
     email: {
       type: String,
       trim: true,
@@ -24,6 +23,26 @@ const UserSchema = new mongoose.Schema(
     },
     salt: {
       type: String,
+    },
+    bookmarks: [PostSchema],
+    followers: [],
+    following: [],
+
+    name: {
+      type: String,
+      maxlength: 32,
+      required: true,
+      trim: true,
+    },
+    bio: {
+      type: String,
+      maxlength: 2000,
+      required: true,
+    },
+    link: String,
+    photo: {
+      data: Buffer,
+      contentType: String,
     },
   },
   { timestamps: true }
