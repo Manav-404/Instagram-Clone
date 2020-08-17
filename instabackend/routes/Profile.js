@@ -1,13 +1,22 @@
 const express = require("express");
 const router = express.Router();
 const { isSignIn, isAuthenticated } = require("../controller/Auth");
-const { getUserById } = require("../controller/User");
+const {
+  getUserById,
+  getUserByName,
+  getProfileByUserId,
+  getProfileBySearch,
+  photo,
+  createProfile,
+  deleteProfile,
+} = require("../controller/Profile");
 
 router.param("userId", getUserById);
-router.param("username", getUserByUsername);
+router.param("name", getUserByName);
 
 router.get("/profile/:userId", isSignIn, getProfileByUserId);
-router.get("/profile/list/:username", isSignIn, getProfileBySearch);
+router.get("/profile/list/:name", isSignIn, getProfileBySearch);
+router.get("/profile/photo/:userId", photo);
 
 router.post(
   "/profile/create/:userId",
@@ -16,11 +25,11 @@ router.post(
   createProfile
 );
 
-router.put("/profile/edit/:userId", isSignIn, isAuthenticated, editProfile);
-
 router.delete(
   "/profile/delete/:userId",
   isSignIn,
   isAuthenticated,
   deleteProfile
 );
+
+module.exports = router;
