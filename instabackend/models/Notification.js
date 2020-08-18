@@ -11,3 +11,5 @@ const NotificationSchema = new mongoose.Schema({
     ref: "User",
   },
 });
+
+module.exports = mongoose.model("Notification", NotificationSchema);
