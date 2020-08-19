@@ -16,8 +16,8 @@ exports.getUserById = (req, res, next, id) => {
   });
 };
 
-exports.getUserByName = (req, res, next) => {
-  User.find({ name: req.params.name }).exec((error, users) => {
+exports.getUserByName = (req, res, next, name) => {
+  User.find({ name: name }).exec((error, users) => {
     if (error || !users) {
       return res.status(400).json({
         error: "No users found",
@@ -87,7 +87,7 @@ exports.createProfile = (req, res) => {
     if (file.photo) {
       if (file.photo.size > 4000000) {
         return res.status(400).json({
-          error: "The size of the file is more than 3MB ",
+          error: "The size of the file is more than 4MB ",
         });
       }
     }
@@ -99,7 +99,7 @@ exports.createProfile = (req, res) => {
     user.photo.contentType = file.photo.type;
 
     user.save((error, user) => {
-      if (err) {
+      if (error) {
         return res.status(400).json({
           error: "Problem in updating the profile",
         });

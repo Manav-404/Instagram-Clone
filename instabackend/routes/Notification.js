@@ -2,6 +2,12 @@ const express = require("express");
 const { isSignIn, isAuthenticated } = require("../controller/Auth");
 const { getUserById } = require("../controller/Profile");
 const router = express.Router();
+const {
+  getNotificationById,
+  getNotifications,
+  createNotification,
+  deleteNotification,
+} = require("../controller/Notification");
 
 router.param("userId", getUserById);
 router.param("notificationId", getNotificationById);

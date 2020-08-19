@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
 const { ObjectId } = mongoose.Schema;
-const CommentSchema = require("./Comment");
 
 const PostSchema = new mongoose.Schema({
   caption: {

@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const crypto = require("crypto");
 
 const uuidv1 = require("uuid/v1");
-const { timeStamp } = require("console");
+const { ObjectId } = mongoose.Schema;
 
 const UserSchema = new mongoose.Schema(
   {
@@ -24,7 +24,12 @@ const UserSchema = new mongoose.Schema(
     salt: {
       type: String,
     },
-    bookmarks: [PostSchema],
+    bookmarks: [
+      {
+        type: ObjectId,
+        ref: "Post",
+      },
+    ],
     followers: [],
     following: [],
 
