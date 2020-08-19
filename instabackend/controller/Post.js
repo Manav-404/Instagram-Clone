@@ -3,6 +3,7 @@ const formidable = require("formidable");
 const _ = require("lodash");
 const fs = require("fs");
 const Comment = require("../models/Comment");
+const User = require("../models/User");
 
 exports.getPostById = (req, res, next, id) => {
   Post.findById(id).exec((err, post) => {
@@ -113,6 +114,26 @@ exports.getAllPostCommentsByPostId = (req, res) => {
   });
 };
 
-exports.createBookmarks = (req, res) => {};
+exports.createBookmarks = (req, res) => {
+  let post = req.post;
+  let user = req.user;
 
-exports.getBookmarksByUserId = (req, res) => {};
+  User.findByIdAndUpdate(
+    { _id: user._id },
+    { $addToSet: { bookmarks: { $each: [post] } } },
+    (error, document) => {
+      if (error) {
+        return res.status(400).json({
+          error: "Could not add to bookmarks",
+        });
+      }
+
+      return res.json(document);
+    }
+  );
+};
+
+exports.getBookmarksByUserId = (req, res) => {
+  let bookmarks = req.user.bookmarks;
+  res.json(bookmarks);
+};

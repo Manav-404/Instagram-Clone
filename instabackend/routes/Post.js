@@ -2,6 +2,15 @@ const express = require("express");
 const { getUserById, photo } = require("../controller/Profile");
 const { isSignIn, isAuthenticated } = require("../controller/Auth");
 const router = express.Router();
+const {
+  getPostById,
+  getPostsForUserId,
+  createPost,
+  createPostComment,
+  getAllPostCommentsByPostId,
+  createBookmarks,
+  getBookmarksByUserId,
+} = require("../controller/Post");
 
 router.param("userId", getUserById);
 router.param("postId", getPostById);
