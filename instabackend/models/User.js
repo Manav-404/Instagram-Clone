@@ -36,13 +36,11 @@ const UserSchema = new mongoose.Schema(
     name: {
       type: String,
       maxlength: 32,
-      required: true,
       trim: true,
     },
     bio: {
       type: String,
       maxlength: 2000,
-      required: true,
     },
     link: String,
     photo: {

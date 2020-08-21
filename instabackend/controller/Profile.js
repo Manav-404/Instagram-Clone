@@ -17,7 +17,7 @@ exports.getUserById = (req, res, next, id) => {
 };
 
 exports.getUserByName = (req, res, next, name) => {
-  User.find({ name: name }).exec((error, users) => {
+  User.find({ name: new RegExp(name, "i") }).exec((error, users) => {
     if (error || !users) {
       return res.status(400).json({
         error: "No users found",
@@ -49,11 +49,6 @@ exports.getProfileByUserId = (req, res) => {
 exports.getProfileBySearch = (req, res) => {
   let users = req.users;
   let finalList = [];
-  if (users.length === 0) {
-    return res.json({
-      error: "No users found",
-    });
-  }
   users.map((user) => {
     user.salt = undefined;
     user.encry_password = undefined;

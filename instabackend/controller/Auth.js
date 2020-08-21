@@ -13,6 +13,7 @@ exports.signup = (req, res) => {
 
   const user = new User(req.body);
   user.save((err, user) => {
+    console.log(err);
     if (err) {
       return res.status(400).json({
         error: "Unable to signup",
@@ -20,7 +21,7 @@ exports.signup = (req, res) => {
     }
 
     return res.json({
-      name: user.username,
+      username: user.username,
       email: user.email,
       id: user._id,
     });
@@ -73,9 +74,10 @@ exports.isSignIn = expressJwt({
 });
 
 exports.isAuthenticated = (req, res, next) => {
-  let checker = req.user && req.auth && req.user._id === req.auth._id;
+  console.log(req.auth);
+  let checker = req.user && req.auth && req.user._id == req.auth.__id;
   if (!checker) {
-    res.status(401).json({
+    return res.status(401).json({
       error: "Access Denied",
     });
   }
