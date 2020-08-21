@@ -81,8 +81,7 @@ exports.createPost = (req, res) => {
 };
 
 exports.createPostComment = (req, res) => {
-  let comment = new Comment();
-  comment.comment = req.body.comment;
+  let comment = new Comment(req.body);
   comment.user = req.user;
   comment.post = req.post;
 
@@ -92,6 +91,8 @@ exports.createPostComment = (req, res) => {
         error: "PCould not post comment. Please try again.",
       });
     }
+    comment.post = undefined;
+    comment.user = undefined;
     return res.json(comment);
   });
 };

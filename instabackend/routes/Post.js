@@ -15,7 +15,7 @@ const {
 router.param("userId", getUserById);
 router.param("postId", getPostById);
 
-router.get("/posts/:userId", isSignIn, photo, getPostsForUserId);
+router.get("/posts/:userId", isSignIn, getPostsForUserId);
 
 router.post("/posts/create/:userId", isSignIn, isAuthenticated, createPost);
 
@@ -26,10 +26,10 @@ router.post(
   createPostComment
 );
 
-router.get("/posts/comment/:postId", isSign, getAllPostCommentsByPostId);
+router.get("/posts/comment/:postId", isSignIn, getAllPostCommentsByPostId);
 
 router.post(
-  "/post/bookmark/:postId/:userId",
+  "/posts/bookmark/:postId/:userId",
   isSignIn,
   isAuthenticated,
   createBookmarks
