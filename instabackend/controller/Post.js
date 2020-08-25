@@ -136,5 +136,12 @@ exports.createBookmarks = (req, res) => {
 
 exports.getBookmarksByUserId = (req, res) => {
   let bookmarks = req.user.bookmarks;
-  res.json(bookmarks);
+  bookmarks.map((bookmark) => {
+    let _id = bookmark._id;
+    Post.findById(_id)
+      .populate("user", "_id  name")
+      .exec((err, post) => {
+        return res.json(post);
+      });
+  });
 };
