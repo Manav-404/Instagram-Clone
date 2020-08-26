@@ -3,7 +3,12 @@ import "./Authentication.css";
 import logo from "../../logo.png";
 import Button from "@material-ui/core/Button";
 import Alert from "@material-ui/lab/Alert";
-import { Signup } from "./helper/authenticationHelper";
+import {
+  Signup,
+  Signin,
+  authenticateUser,
+} from "./helper/authenticationHelper";
+import { Redirect } from "react-router-dom";
 
 const Authentication = () => {
   const [signup, setSignup] = useState(false);
@@ -26,8 +31,8 @@ const Authentication = () => {
   };
 
   const redirectToHome = () => {
-    if (redirect == true) {
-      console.log("signup successful");
+    if (redirect === true) {
+      return <Redirect to="/home" />;
     }
   };
 
@@ -58,17 +63,39 @@ const Authentication = () => {
       });
   };
 
+  const onSignInSubmit = (event) => {
+    event.preventDefault();
+    Signin({ email, password })
+      .then((data) => {
+        if (data.error) {
+          setValues({ ...values, error: data.error, redirect: false });
+        } else {
+          authenticateUser(data, () => {
+            setValues({
+              username: "",
+              email: "",
+              password: "",
+              error: "",
+              redirect: true,
+            });
+          });
+        }
+      })
+      .catch((error) => {
+        setValues({ ...values, error: error, redirect: false });
+      });
+  };
+
   const loadSignup = () => {
     return (
       <div className="auth">
-        {errorOnSubmit()}
         <div className="signup__container">
           <img src={logo} alt="" height="50" width="50" />
           <div className="title">Instagram</div>
           <form>
             <input
               type="text"
-              name="text"
+              name="username"
               placeholder="Username"
               value={username}
               onChange={handleChange("username")}
@@ -117,6 +144,7 @@ const Authentication = () => {
               type="email"
               name="email"
               placeholder="Email"
+              value={email}
               id=""
               onChange={handleChange("email")}
             />
@@ -124,11 +152,17 @@ const Authentication = () => {
               type="password"
               name="password"
               placeholder="Password"
+              value={password}
               onChange={handleChange("password")}
             />
             <br />
             <br />
-            <Button variant="contained" color="primary" fullWidth={true}>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={onSignInSubmit}
+              fullWidth={true}
+            >
               Log In
             </Button>
           </form>
@@ -140,7 +174,13 @@ const Authentication = () => {
     );
   };
 
-  return <div>{!signup ? login() : loadSignup()}</div>;
+  return (
+    <div>
+      {errorOnSubmit()}
+      {redirectToHome()}
+      {!signup ? login() : loadSignup()}
+    </div>
+  );
 };
 
 export default Authentication;
