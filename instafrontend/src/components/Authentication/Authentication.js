@@ -30,9 +30,9 @@ const Authentication = () => {
     setValues({ ...values, [name]: event.target.value });
   };
 
-  const redirectToHome = () => {
+  const redirectToProfile = () => {
     if (redirect === true) {
-      return <Redirect to="/home" />;
+      return <Redirect to="/profile" />;
     }
   };
 
@@ -177,7 +177,7 @@ const Authentication = () => {
   return (
     <div>
       {errorOnSubmit()}
-      {redirectToHome()}
+      {redirectToProfile()}
       {!signup ? login() : loadSignup()}
     </div>
   );

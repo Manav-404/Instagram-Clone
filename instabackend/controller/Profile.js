@@ -100,7 +100,8 @@ exports.createProfile = (req, res) => {
         });
       }
 
-      return res.json(user);
+      const { _id, username, name } = user;
+      return res.json({ _id, username, name });
     });
   });
 };

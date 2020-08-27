@@ -22,7 +22,6 @@ exports.signup = (req, res) => {
 
     return res.json({
       username: user.username,
-      email: user.email,
       id: user._id,
     });
   });
@@ -56,8 +55,8 @@ exports.signin = (req, res) => {
     });
 
     res.cookie("token", token);
-    const { _id, username, email } = user;
-    return res.json({ token, user: { _id, username, email } });
+    const { _id, username, name } = user;
+    return res.json({ token, user: { _id, username, name } });
   });
 };
 
