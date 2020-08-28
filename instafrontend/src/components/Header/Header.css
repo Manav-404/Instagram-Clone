@@ -1,3 +1,6 @@
+@import url('https://fonts.googleapis.com/css2?family=Rochester&display=swap');
+
+
 body{
     background-color: #f8f8f8;
     margin: 0;
@@ -30,7 +33,6 @@ body{
     display: flex;
     align-items: center;
 }
-@import url('https://fonts.googleapis.com/css2?family=Rochester&display=swap');
 
 .header__middle{
     display: flex;
@@ -44,7 +46,7 @@ body{
 .header__right{
     display: flex;
     align-items: center;
-    margin-right: 50px;
+    margin-right: 10px;
     
 }
 
