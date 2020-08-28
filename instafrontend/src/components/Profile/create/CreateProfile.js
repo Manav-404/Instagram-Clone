@@ -3,7 +3,10 @@ import "./CreateProfile.css";
 import { Button } from "@material-ui/core";
 import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 import { createProfile } from "../helper/profileHelper";
-import { isAuthenticated } from "../../Authentication/helper/authenticationHelper";
+import {
+  isAuthenticated,
+  updateLocalStorage,
+} from "../../Authentication/helper/authenticationHelper";
 import Alert from "@material-ui/lab/Alert";
 import { Redirect } from "react-router-dom";
 
@@ -16,17 +19,14 @@ const CreateProfile = () => {
     error: "",
     redirect: false,
     formData: "",
+    data: "",
   });
-
-  const { name, bio, link, photo, error, redirect, formData } = profile;
+  const { user, token } = isAuthenticated();
+  const { name, bio, link, photo, error, redirect, formData, data } = profile;
 
   useEffect(() => {
     setProfile({ ...profile, formData: new FormData() });
   }, []);
-
-  const {
-    user: { _id },
-  } = isAuthenticated();
 
   const handleChange = (name) => (event) => {
     const value = name == "photo" ? event.target.files[0] : event.target.value;
@@ -42,16 +42,23 @@ const CreateProfile = () => {
 
   const redirectToHome = () => {
     if (redirect === true) {
+      updateLocalStorage("token", data);
       return <Redirect to="/home" />;
     }
   };
 
   const submitProfile = (event) => {
     event.preventDefault();
-    createProfile(formData, _id)
+    console.log(user._id);
+    createProfile(token, formData, user._id)
       .then((data) => {
         if (data.error) {
-          setProfile({ ...profile, error: data.error, redirect: false });
+          setProfile({
+            ...profile,
+            error: data.error,
+            redirect: false,
+            data: "",
+          });
         } else {
           setProfile({
             name: "",
@@ -59,11 +66,12 @@ const CreateProfile = () => {
             link: "",
             error: "",
             redirect: true,
+            data: data,
           });
         }
       })
       .catch((error) => {
-        setProfile({ ...profile, error: error, redirect: false });
+        setProfile({ ...profile, error: error, redirect: false, data: "" });
       });
   };
 

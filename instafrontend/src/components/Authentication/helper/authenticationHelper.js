@@ -53,8 +53,9 @@ export const isAuthenticated = () => {
   }
 };
 
-export const updateLocalStorage = (item, key, value) => {
+export const updateLocalStorage = (item, value) => {
   const data = localStorage.getItem(item);
-  data[key] = value;
-  localStorage.setItem(item, JSON.stringify(data));
+  const existing = JSON.parse(data);
+  existing["user"] = value;
+  localStorage.setItem(item, JSON.stringify(existing));
 };

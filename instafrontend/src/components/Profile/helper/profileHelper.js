@@ -1,8 +1,7 @@
 import { API } from "../../../backend";
 import { isAuthenticated } from "../../Authentication/helper/authenticationHelper";
 
-const { token } = isAuthenticated();
-export const createProfile = (profile, id) => {
+export const createProfile = (token, profile, id) => {
   return fetch(`${API}/profile/create/${id}`, {
     method: "POST",
     headers: {
