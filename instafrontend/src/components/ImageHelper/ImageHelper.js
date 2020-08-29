@@ -2,6 +2,7 @@ import React from "react";
 import { API } from "../../backend";
 import { makeStyles } from "@material-ui/core/styles";
 import { Avatar } from "@material-ui/core";
+import { Redirect } from "react-router-dom";
 
 const ImageHelper = ({ id, size }) => {
   const useStyles = makeStyles((theme) => ({
@@ -18,8 +19,8 @@ const ImageHelper = ({ id, size }) => {
       marginTop: "5px",
     },
     large: {
-      width: theme.spacing(7),
-      height: theme.spacing(7),
+      width: theme.spacing(18),
+      height: theme.spacing(18),
     },
   }));
 

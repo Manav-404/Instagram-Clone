@@ -43,12 +43,8 @@ exports.getProfileByUserId = (req, res) => {
   req.user.createdAt = undefined;
   req.user.updatedAt = undefined;
   req.user.photo = undefined;
-  req.user.email = undefined;req.user.salt = undefined;
-  req.user.encry_password = undefined;
-  req.user.createdAt = undefined;
-  req.user.updatedAt = undefined;
-  req.user.photo = undefined;
   req.user.email = undefined;
+  req.user.salt = undefined;
   return res.json(req.user);
 };
 

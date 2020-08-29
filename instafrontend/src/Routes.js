@@ -6,6 +6,7 @@ import PrivateRoutes from "./PrivateRoutes";
 import Home from "./components/Home/Home";
 import CreateProfile from "./components/Profile/create/CreateProfile";
 import Profile from "./components/Profile/Profile";
+import ProfileView from "./components/Profile/view/ProfileView";
 
 const Routes = () => {
   return (
@@ -16,6 +17,7 @@ const Routes = () => {
         <PrivateRoutes exact path="/home" component={Home} />
         <PrivateRoutes exact path="/profile" component={Profile} />
         <PrivateRoutes exact path="/profile/create" component={CreateProfile} />
+        <PrivateRoutes exact path="/profile/view/:id" component={ProfileView} />
       </Switch>
     </BrowserRouter>
   );
