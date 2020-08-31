@@ -18,3 +18,18 @@ export const createProfile = (token, profile, id) => {
       return error;
     });
 };
+
+export const getProfileById = (id, token) => {
+  return fetch(`${API}/profile/${id}`, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+    .then((response) => {
+      return response.json();
+    })
+    .catch((error) => {
+      return error;
+    });
+};

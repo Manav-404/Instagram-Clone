@@ -60,13 +60,19 @@
     flex-direction: column;
     margin-top: 20px;
     margin-left: 20px;
-    word-wrap: break-word;
+    line-height: 10px;
 
 
 }
 
 .name{
     font-size: 20px;
+}
+
+.profile__bottom {
+    width: 50%;
+    margin: auto;
+    margin-top: 70px;
 }
 
 

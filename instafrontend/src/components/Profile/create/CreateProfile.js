@@ -49,7 +49,6 @@ const CreateProfile = () => {
 
   const submitProfile = (event) => {
     event.preventDefault();
-    console.log(user._id);
     createProfile(token, formData, user._id)
       .then((data) => {
         if (data.error) {

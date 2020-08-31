@@ -19,21 +19,24 @@ exports.getPostById = (req, res, next, id) => {
 };
 
 exports.getPostsForUserId = (req, res) => {
-  Post.find({ user: req.user._id }).exec((err, posts) => {
-    if (err) {
-      return res.status(400).json({
-        error: "Error in finding posts",
-      });
-    }
+  Post.find({ user: req.user._id })
+    .populate("user", "_id , username ")
+    .select("-photo")
+    .exec((err, posts) => {
+      if (err) {
+        return res.status(400).json({
+          error: "Error in finding posts",
+        });
+      }
 
-    if (posts.length <= 0) {
-      return res.status(400).json({
-        error: "Looks like theres no post :)",
-      });
-    }
+      if (posts.length <= 0) {
+        return res.status(400).json({
+          error: "Looks like theres no post :)",
+        });
+      }
 
-    return res.json(posts);
-  });
+      return res.json(posts);
+    });
 };
 
 exports.createPost = (req, res) => {
@@ -74,6 +77,19 @@ exports.createPost = (req, res) => {
           error: "Problem in creating post. Please try again.",
         });
       }
+
+      fs.writeFile(
+        `http://127.0.0.1:9000/Documents/uploads/${post.__id}/`,
+        post.photo.data,
+        "binary",
+        (errr) => {
+          if (error) {
+            post.url = "";
+          }
+        }
+      );
+
+      post.url = `http://127.0.0.1:9000/Documents/uploads/${post.__id}/${file.name}`;
 
       return res.json(post);
     });
