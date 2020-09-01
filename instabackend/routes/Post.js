@@ -1,5 +1,5 @@
 const express = require("express");
-const { getUserById, photo } = require("../controller/Profile");
+const { getUserById } = require("../controller/Profile");
 const { isSignIn, isAuthenticated } = require("../controller/Auth");
 const router = express.Router();
 const {
@@ -10,12 +10,14 @@ const {
   getAllPostCommentsByPostId,
   createBookmarks,
   getBookmarksByUserId,
+  photo,
 } = require("../controller/Post");
 
 router.param("userId", getUserById);
 router.param("postId", getPostById);
 
 router.get("/posts/:userId", isSignIn, getPostsForUserId);
+router.get("/posts/photo/:postId", photo);
 
 router.post("/posts/create/:userId", isSignIn, isAuthenticated, createPost);
 

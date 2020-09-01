@@ -16,17 +16,17 @@ export const createPost = (id, token, post) => {
     });
 };
 
-// export const getPostsByUser = (token, id) => {
-//   return fetch(`${API}/posts/${id}`, {
-//     method: "GET",
-//     headers: {
-//       Authorization: `Bearer ${token}`,
-//     },
-//   })
-//     .then((response) => {
-//       return response.json();
-//     })
-//     .catch((error) => {
-//       return error;
-//     });
-// };
+export const getPostsByUser = (token, id) => {
+  return fetch(`${API}/posts/${id}`, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+    .then((response) => {
+      return response.json();
+    })
+    .catch((error) => {
+      return error;
+    });
+};

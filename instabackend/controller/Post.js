@@ -6,14 +6,14 @@ const Comment = require("../models/Comment");
 const User = require("../models/User");
 
 exports.getPostById = (req, res, next, id) => {
-  Post.findById(id).exec((err, post) => {
-    if (err || !post) {
+  Post.findById(id).exec((err, data) => {
+    if (err || !data) {
       return res.status(400).json({
         error: "Looks like theres no post :)",
       });
     }
 
-    req.post = post;
+    req.post = data;
     next();
   });
 };
@@ -70,6 +70,7 @@ exports.createPost = (req, res) => {
 
     post.user = req.user;
     post.photo.data = fs.readFileSync(file.photo.path);
+    post.photo.contentType = file.photo.type;
 
     post.save((error, post) => {
       if (error) {
@@ -77,23 +78,18 @@ exports.createPost = (req, res) => {
           error: "Problem in creating post. Please try again.",
         });
       }
-
-      fs.writeFile(
-        `http://127.0.0.1:9000/Documents/uploads/${post.__id}/`,
-        post.photo.data,
-        "binary",
-        (errr) => {
-          if (error) {
-            post.url = "";
-          }
-        }
-      );
-
-      post.url = `http://127.0.0.1:9000/Documents/uploads/${post.__id}/${file.name}`;
-
       return res.json(post);
     });
   });
+};
+
+exports.photo = (req, res, next) => {
+  console.log(req.post.photo);
+  if (req.post.photo.data) {
+    res.set("Content-Type", req.post.photo.contentType);
+    res.send(req.post.photo.data);
+    next();
+  }
 };
 
 exports.createPostComment = (req, res) => {

@@ -69,16 +69,11 @@ const ProfileView = () => {
 
   useEffect(() => {
     getProfile();
+    getPosts();
   }, []);
 
   const loadPosts = () => {
-    return (
-      <div className="photo__grid">
-        {post.map((p, index) => {
-          return <PostImageHelper value={p} />;
-        })}
-      </div>
-    );
+    return <div className="photo__grid"></div>;
   };
 
   const loadTop = () => {
@@ -101,7 +96,7 @@ const ProfileView = () => {
           </div>
           <div className="profile__following">
             <div className="post">
-              <b>30</b> Posts
+              <b>{post.length > 0 ? post.length : 0}</b> posts
             </div>
             <div className="followers">
               <b>{followers.length} </b>followers
@@ -128,7 +123,13 @@ const ProfileView = () => {
 
   const loadPostBookmark = () => {
     if (value === "one") {
-      return <div>1</div>;
+      return (
+        <div className="profile__posts">
+          {post.map((p, i) => {
+            return <PostImageHelper key={i} post={p} />;
+          })}
+        </div>
+      );
     } else {
       return <h1>2</h1>;
     }
@@ -148,7 +149,7 @@ const ProfileView = () => {
             <Tab value="two" icon={<BookmarkBorderIcon />}></Tab>
           </Tabs>
         </div>
-        <div className="profile__posts">{loadPostBookmark()}</div>
+        <div>{post.length > 0 ? loadPostBookmark() : ""}</div>
       </div>
     );
   };
