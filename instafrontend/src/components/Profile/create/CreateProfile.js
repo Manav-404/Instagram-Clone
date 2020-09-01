@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import "./CreateProfile.css";
+import "../Profile.css";
 import { Button } from "@material-ui/core";
 import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 import { createProfile } from "../helper/profileHelper";

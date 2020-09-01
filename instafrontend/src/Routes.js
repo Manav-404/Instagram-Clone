@@ -8,6 +8,7 @@ import CreateProfile from "./components/Profile/create/CreateProfile";
 import Profile from "./components/Profile/Profile";
 import ProfileView from "./components/Profile/view/ProfileView";
 import PostCreate from "./components/Post/create/PostCreate";
+import Search from "./components/Profile/search/Search";
 
 const Routes = () => {
   return (
@@ -19,6 +20,7 @@ const Routes = () => {
         <PrivateRoutes exact path="/profile" component={Profile} />
         <PrivateRoutes exact path="/profile/create" component={CreateProfile} />
         <PrivateRoutes exact path="/profile/view/:id" component={ProfileView} />
+        <PrivateRoutes exact path="/profile/search/:key" component={Search} />
         <PrivateRoutes exact path="/posts/create" component={PostCreate} />
       </Switch>
     </BrowserRouter>

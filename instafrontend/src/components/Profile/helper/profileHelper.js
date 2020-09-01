@@ -33,3 +33,18 @@ export const getProfileById = (id, token) => {
       return error;
     });
 };
+
+export const getProfilesBySearch = (key, token) => {
+  return fetch(`${API}/profile/list/${key}`, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+    .then((response) => {
+      return response.json();
+    })
+    .catch((error) => {
+      return error;
+    });
+};

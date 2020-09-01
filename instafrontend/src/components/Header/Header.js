@@ -8,11 +8,14 @@ import ImageHelper from "../ImageHelper/ImageHelper";
 import { isAuthenticated } from "../Authentication/helper/authenticationHelper";
 import { Redirect, Link } from "react-router-dom";
 import PostAddRoundedIcon from "@material-ui/icons/PostAddRounded";
+import { Menu, MenuItem, Card, CardContent } from "@material-ui/core";
 
 const Header = () => {
   const { user } = isAuthenticated();
   const [home, setHome] = useState(false);
   const [post, setPost] = useState(false);
+  const [searchkey, setSearchKey] = useState("");
+  const [keyboardCode, setKeyboardCode] = useState("");
 
   const redirect = () => {
     if (home == true) {
@@ -22,9 +25,16 @@ const Header = () => {
     if (post == true) {
       return <Redirect to="/posts/create" />;
     }
+
+    if (searchkey !== "" && keyboardCode === 13) {
+      return <Redirect to={`/profile/search/${searchkey}`} />;
+    }
   };
 
-  console.log(home);
+  const catchEvent = (event) => {
+    setSearchKey(event.target.value);
+    setKeyboardCode(event.charCode);
+  };
 
   return (
     <div className="header__container">
@@ -38,6 +48,8 @@ const Header = () => {
           className="header__search"
           name="search"
           placeholder="Search"
+          autoComplete="off"
+          onKeyPress={catchEvent}
         />
       </div>
       <div className="header__right">

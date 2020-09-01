@@ -67,6 +67,15 @@ body{
     margin-bottom: 18px;
 }
 
+.header__card{
+    position: absolute;
+    margin-top: 250px;
+    width: 250px;
+    max-height: 200px;
+    text-align: center;
+    overflow-y: auto;
+}
+
 ::placeholder {
     text-align: center;
 }

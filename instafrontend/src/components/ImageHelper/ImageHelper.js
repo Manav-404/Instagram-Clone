@@ -18,6 +18,10 @@ const ImageHelper = ({ id, size }) => {
       marginLeft: "17px",
       marginTop: "5px",
     },
+    medium: {
+      width: theme.spacing(8),
+      height: theme.spacing(8),
+    },
     large: {
       width: theme.spacing(18),
       height: theme.spacing(18),
@@ -29,6 +33,8 @@ const ImageHelper = ({ id, size }) => {
   const image = () => {
     if (size === "small") {
       return <Avatar src={imageURL} className={classes.small} />;
+    } else if (size === "medium") {
+      return <Avatar src={imageURL} className={classes.medium} />;
     } else {
       return <Avatar src={imageURL} className={classes.large} />;
     }

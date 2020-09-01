@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import "./ProfileView.css";
+import "../Profile.css";
 import Header from "../../Header/Header";
 import ImageHelper from "../../ImageHelper/ImageHelper";
 import { useParams, Link } from "react-router-dom";
