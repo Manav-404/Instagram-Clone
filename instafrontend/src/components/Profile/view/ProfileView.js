@@ -3,10 +3,13 @@ import "../Profile.css";
 import Header from "../../Header/Header";
 import ImageHelper from "../../ImageHelper/ImageHelper";
 import { useParams, Link, Redirect } from "react-router-dom";
-import { isAuthenticated } from "../../Authentication/helper/authenticationHelper";
+import {
+  isAuthenticated,
+  updateLocalStorage,
+  updateFollowingCount,
+} from "../../Authentication/helper/authenticationHelper";
 import { useState } from "react";
 import SettingsOutlinedIcon from "@material-ui/icons/SettingsOutlined";
-import Divider from "@material-ui/core/Divider";
 import { getProfileById, addAndNotify } from "../helper/profileHelper";
 import { Tabs, Tab } from "@material-ui/core";
 import GridOnIcon from "@material-ui/icons/GridOn";
@@ -20,7 +23,7 @@ const ProfileView = () => {
   const [own, setOwn] = useState(false);
   const [error, setError] = useState("");
   const [profile, setProfile] = useState({
-    id: "",
+    uid: "",
     username: "",
     name: "",
     bio: "",
@@ -32,6 +35,16 @@ const ProfileView = () => {
   const [value, setValue] = useState("one");
   const [post, setPost] = useState([]);
   const [add, setAdd] = useState(false);
+  const [isFollowing, setIsFollowing] = useState(false);
+
+  useEffect(() => {
+    getProfile();
+    getPosts();
+    checker();
+    followChecker();
+  }, [id]);
+
+  const { username, name, bio, link, followers, following } = profile;
 
   const checker = () => {
     if (id === user._id) {
@@ -39,13 +52,19 @@ const ProfileView = () => {
     }
   };
 
-  const { username, name, bio, link, followers, following } = profile;
+  const followChecker = () => {
+    user.following.map((friend, index) => {
+      if (friend._id == id) {
+        setIsFollowing(true);
+      }
+    });
+  };
 
   const getProfile = () => {
     getProfileById(id, token)
       .then((data) => {
         setProfile({
-          id: data._id,
+          uid: data._id,
           username: data.username,
           name: data.name,
           bio: data.bio,
@@ -69,25 +88,59 @@ const ProfileView = () => {
       });
   };
 
-  useEffect(() => {
-    getProfile();
-    getPosts();
-    checker();
-  }, [id]);
+  // const loadPosts = () => {
+  //   return <div className="photo__grid"></div>;
+  // };
 
-  const loadPosts = () => {
-    return <div className="photo__grid"></div>;
+  const buttonChecker = () => {
+    if (own === true) {
+      return <button className="edit_button">Edit Profile</button>;
+    } else {
+      if (user.following.length !== 0) {
+        if (isFollowing == true) {
+          return <button className="edit_button">Following</button>;
+        } else {
+          return (
+            <button className="follow_button" onClick={() => setAdd(true)}>
+              Follow
+            </button>
+          );
+        }
+      } else {
+        return (
+          <button className="follow_button" onClick={() => setAdd(true)}>
+            Follow
+          </button>
+        );
+      }
+    }
   };
 
   const addToFollowing = () => {
     if (add === true) {
-      addAndNotify(token, user._id, profile.id)
+      addAndNotify(token, user._id, profile.uid)
         .then((data) => {
-          return <Redirect to="/home" />;
+          updateFollowingCount("token", data.to_user);
         })
         .catch((error) => {
           console.log(error);
         });
+
+      return <Redirect to="/home" />;
+    }
+  };
+
+  const loadPostBookmark = () => {
+    if (value === "one") {
+      return (
+        <div className="profile__posts">
+          {post.map((p, i) => {
+            return <PostImageHelper key={i} post={p} />;
+          })}
+        </div>
+      );
+    } else {
+      return <h1>Bookmarks</h1>;
     }
   };
 
@@ -102,15 +155,7 @@ const ProfileView = () => {
             <div className="username">
               <p>{username}</p>
             </div>
-            <div className="edit">
-              {own === true ? (
-                <button className="edit_button">Edit Profile</button>
-              ) : (
-                <button className="follow_button" onClick={() => setAdd(true)}>
-                  Follow
-                </button>
-              )}
-            </div>
+            <div className="edit">{buttonChecker()}</div>
             <div className="settings">
               <SettingsOutlinedIcon style={{ fontSize: 30 }} />
             </div>
@@ -142,20 +187,6 @@ const ProfileView = () => {
     setValue(value);
   };
 
-  const loadPostBookmark = () => {
-    if (value === "one") {
-      return (
-        <div className="profile__posts">
-          {post.map((p, i) => {
-            return <PostImageHelper key={i} post={p} />;
-          })}
-        </div>
-      );
-    } else {
-      return <h1>2</h1>;
-    }
-  };
-
   const loadBottom = () => {
     return (
       <div className="profile__bottom">
@@ -167,7 +198,11 @@ const ProfileView = () => {
             TabIndicatorProps={{ style: { backgroundColor: "black" } }}
           >
             <Tab value="one" icon={<GridOnIcon />}></Tab>
-            <Tab value="two" icon={<BookmarkBorderIcon />}></Tab>
+            {own === true ? (
+              <Tab value="two" icon={<BookmarkBorderIcon />}></Tab>
+            ) : (
+              ""
+            )}
           </Tabs>
         </div>
         <div>{post.length > 0 ? loadPostBookmark() : ""}</div>

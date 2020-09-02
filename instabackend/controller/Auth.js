@@ -55,8 +55,13 @@ exports.signin = (req, res) => {
     });
 
     res.cookie("token", token);
-    const { _id, username, name } = user;
-    return res.json({ token, user: { _id, username, name } });
+    const { _id, username, name, following } = user;
+    if (following.length === 0) {
+      let following = [];
+      return res.json({ token, user: { _id, username, name, following } });
+    } else {
+      return res.json({ token, user: { _id, username, name, following } });
+    }
   });
 };
 

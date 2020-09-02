@@ -102,8 +102,13 @@ exports.createProfile = (req, res) => {
         });
       }
 
-      const { _id, username, name } = user;
-      return res.json({ _id, username, name });
+      const { _id, username, name, following } = user;
+      if (following.length === 0) {
+        let following = [];
+        return res.json({ _id, username, name, following });
+      } else {
+        return res.json({ _id, username, name, following });
+      }
     });
   });
 };

@@ -59,3 +59,11 @@ export const updateLocalStorage = (item, value) => {
   existing["user"] = value;
   localStorage.setItem(item, JSON.stringify(existing));
 };
+
+export const updateFollowingCount = (item, value) => {
+  const data = localStorage.getItem(item);
+  const existing = JSON.parse(data);
+  const arr = existing["user"].following;
+  arr.push({ _id: value });
+  localStorage.setItem(item, JSON.stringify(existing));
+};

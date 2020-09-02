@@ -51,31 +51,32 @@ exports.createNotification = (req, res) => {
 
   let notification = new Notification({ from_user, to_user });
 
-  notification.save((error, notification) => {
+  notification.save((error, not) => {
     if (error) {
       return res.status(400).json({
         error: "Error creating notification",
       });
     }
 
-    User.updateOne(
-      { _id: to_user._id },
-      { $addToSet: { followers: { $each: [from_user] } } },
-      (error, user) => {
-        if (user) {
-          User.updateOne(
-            { _id: from_user._id },
-            { $addToSet: { following: { $each: [to_user] } } },
-            (error, user) => {
-              if (user) {
-                return res.json({ notification });
-              }
-            }
-          );
-        }
-      }
-    );
+    const { _id, from_user, to_user } = not;
+    return res.json({
+      _id: _id,
+      from_user: from_user._id,
+      to_user: to_user._id,
+    });
   });
+
+  User.updateOne(
+    { _id: from_user._id },
+    { $addToSet: { following: { $each: [to_user] } } },
+    (error, user) => {}
+  );
+
+  User.updateOne(
+    { _id: to_user._id },
+    { $addToSet: { followers: { $each: [from_user] } } },
+    (error, user) => {}
+  );
 };
 
 exports.deleteNotification = (req, res) => {};
