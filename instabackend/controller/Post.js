@@ -84,7 +84,6 @@ exports.createPost = (req, res) => {
 };
 
 exports.photo = (req, res, next) => {
-  console.log(req.post.photo);
   if (req.post.photo.data) {
     res.set("Content-Type", req.post.photo.contentType);
     res.send(req.post.photo.data);

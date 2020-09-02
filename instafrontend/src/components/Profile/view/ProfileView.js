@@ -2,12 +2,12 @@ import React, { useEffect } from "react";
 import "../Profile.css";
 import Header from "../../Header/Header";
 import ImageHelper from "../../ImageHelper/ImageHelper";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, Redirect } from "react-router-dom";
 import { isAuthenticated } from "../../Authentication/helper/authenticationHelper";
 import { useState } from "react";
 import SettingsOutlinedIcon from "@material-ui/icons/SettingsOutlined";
 import Divider from "@material-ui/core/Divider";
-import { getProfileById } from "../helper/profileHelper";
+import { getProfileById, addAndNotify } from "../helper/profileHelper";
 import { Tabs, Tab } from "@material-ui/core";
 import GridOnIcon from "@material-ui/icons/GridOn";
 import BookmarkBorderIcon from "@material-ui/icons/BookmarkBorder";
@@ -20,6 +20,7 @@ const ProfileView = () => {
   const [own, setOwn] = useState(false);
   const [error, setError] = useState("");
   const [profile, setProfile] = useState({
+    id: "",
     username: "",
     name: "",
     bio: "",
@@ -29,8 +30,8 @@ const ProfileView = () => {
   });
 
   const [value, setValue] = useState("one");
-
   const [post, setPost] = useState([]);
+  const [add, setAdd] = useState(false);
 
   const checker = () => {
     if (id === user._id) {
@@ -44,6 +45,7 @@ const ProfileView = () => {
     getProfileById(id, token)
       .then((data) => {
         setProfile({
+          id: data._id,
           username: data.username,
           name: data.name,
           bio: data.bio,
@@ -70,10 +72,23 @@ const ProfileView = () => {
   useEffect(() => {
     getProfile();
     getPosts();
-  }, []);
+    checker();
+  }, [id]);
 
   const loadPosts = () => {
     return <div className="photo__grid"></div>;
+  };
+
+  const addToFollowing = () => {
+    if (add === true) {
+      addAndNotify(token, user._id, profile.id)
+        .then((data) => {
+          return <Redirect to="/home" />;
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
   };
 
   const loadTop = () => {
@@ -88,7 +103,13 @@ const ProfileView = () => {
               <p>{username}</p>
             </div>
             <div className="edit">
-              <button className="edit_button">Edit Profile</button>
+              {own === true ? (
+                <button className="edit_button">Edit Profile</button>
+              ) : (
+                <button className="follow_button" onClick={() => setAdd(true)}>
+                  Follow
+                </button>
+              )}
             </div>
             <div className="settings">
               <SettingsOutlinedIcon style={{ fontSize: 30 }} />
@@ -160,6 +181,7 @@ const ProfileView = () => {
         <Header />
         {loadTop()}
         {loadBottom()}
+        {addToFollowing()}
       </div>
     );
   };

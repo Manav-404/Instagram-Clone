@@ -77,6 +77,19 @@ input{
     border-radius: 5px;
 }
 
+
+.follow_button{
+    width: 100px;
+    box-shadow: none;
+    height: 30px;
+    font-weight: 600;
+    font-size: 13px;
+    color: white;
+    background-color: blue;
+    border: none;
+    border-radius: 5px;
+}
+
 .profile__following{
     display:flex;
     flex-direction: row;

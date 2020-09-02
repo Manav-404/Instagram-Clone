@@ -12,6 +12,13 @@ const PostSchema = new mongoose.Schema({
   },
 });
 
+const FriendSchema = new mongoose.Schema({
+  user: {
+    type: ObjectId,
+    ref: "User",
+  },
+});
+
 const UserSchema = new mongoose.Schema(
   {
     username: {
@@ -33,8 +40,8 @@ const UserSchema = new mongoose.Schema(
       type: String,
     },
     bookmarks: [PostSchema],
-    followers: [],
-    following: [],
+    followers: [FriendSchema],
+    following: [FriendSchema],
 
     name: {
       type: String,

@@ -7,15 +7,17 @@ const {
   getNotifications,
   createNotification,
   deleteNotification,
+  getUserByFriendId,
 } = require("../controller/Notification");
 
 router.param("userId", getUserById);
+router.param("friendId", getUserByFriendId);
 router.param("notificationId", getNotificationById);
 
 router.get("/notfications/:userId", isSignIn, getNotifications);
 
 router.post(
-  "/notifications/create/:userId",
+  "/notifications/create/:userId/:friendId",
   isSignIn,
   isAuthenticated,
   createNotification

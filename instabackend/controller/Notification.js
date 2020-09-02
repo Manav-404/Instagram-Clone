@@ -1,5 +1,6 @@
 const Notification = require("../models/Notification");
 const { check } = require("express-validator");
+const User = require("../models/User");
 
 exports.getNotificationById = (req, res, next, id) => {
   Notification.findById(id).exec((error, notification) => {
@@ -10,6 +11,19 @@ exports.getNotificationById = (req, res, next, id) => {
     }
 
     req.notification = notification;
+    next();
+  });
+};
+
+exports.getUserByFriendId = (req, res, next, id) => {
+  User.findById(id).exec((error, user) => {
+    if (error || !user) {
+      return res.status(400).json({
+        error: "No user found",
+      });
+    }
+
+    req.friend = user;
     next();
   });
 };
@@ -32,46 +46,36 @@ exports.getNotifications = (req, res) => {
 };
 
 exports.createNotification = (req, res) => {
-  let to_user = req.body;
+  let to_user = req.friend;
   let from_user = req.user;
 
-  let checker = false;
+  let notification = new Notification({ from_user, to_user });
 
-  to_user.update(
-    { _id: to_user._id },
-    { $addToSet: { followers: { $each: [from_user] } } },
-    (error, user) => {
-      if (!error) {
-        from_user.update(
-          { _id: from_user._id },
-          { $addToSet: { following: { $each: [to_user] } } },
-          (error, user) => {
-            if (!error || user) {
-              checker = true;
-            }
-          }
-        );
-      }
-    }
-  );
-
-  if (checker === true) {
-    Notification.save({ from_user, to_user }).exec((error, notification) => {
-      if (error) {
-        return res.status(400).json({
-          error: "Error creating notification",
-        });
-      }
-
-      return res.json({
-        notification,
+  notification.save((error, notification) => {
+    if (error) {
+      return res.status(400).json({
+        error: "Error creating notification",
       });
-    });
-  } else {
-    return res.status(400).json({
-      error: "Error creating notification",
-    });
-  }
+    }
+
+    User.updateOne(
+      { _id: to_user._id },
+      { $addToSet: { followers: { $each: [from_user] } } },
+      (error, user) => {
+        if (user) {
+          User.updateOne(
+            { _id: from_user._id },
+            { $addToSet: { following: { $each: [to_user] } } },
+            (error, user) => {
+              if (user) {
+                return res.json({ notification });
+              }
+            }
+          );
+        }
+      }
+    );
+  });
 };
 
 exports.deleteNotification = (req, res) => {};
