@@ -135,7 +135,9 @@ const ProfileView = () => {
       return (
         <div className="profile__posts">
           {post.map((p, i) => {
-            return <PostImageHelper key={i} post={p} />;
+            return (
+              <PostImageHelper key={i} post={p} width={293} height={293} />
+            );
           })}
         </div>
       );

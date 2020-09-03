@@ -4,6 +4,7 @@ const _ = require("lodash");
 const fs = require("fs");
 const Comment = require("../models/Comment");
 const User = require("../models/User");
+const { post } = require("../routes/Post");
 
 exports.getPostById = (req, res, next, id) => {
   Post.findById(id).exec((err, data) => {
@@ -104,7 +105,7 @@ exports.createPostComment = (req, res) => {
     }
     comment.post = undefined;
     comment.user = undefined;
-    return res.json(comment);
+    return res.json({ comment });
   });
 };
 
@@ -155,4 +156,28 @@ exports.getBookmarksByUserId = (req, res) => {
         return res.json(post);
       });
   });
+};
+
+exports.getFriendPosts = (req, res) => {
+  const user = req.user;
+  const friends = user.following;
+  const postList = [];
+
+  friends.map((friend, index) => {
+    Post.find({ user: friend._id })
+      .populate("user", "_id , username")
+      .select("-photo")
+      .sort("-createdDate")
+      .exec((error, post) => {
+        if (error) {
+          return res.status(400).json({
+            error: "Error in finding posts",
+          });
+        }
+
+        postList.concat(post);
+      });
+  });
+
+  return res.json(postList);
 };

@@ -26,6 +26,10 @@ body{
     align-items: center;
     border-bottom: 1px solid #DCDCDC ;
     height: 60px;
+    position: sticky;
+    position: -webkit-sticky;
+    top:0
+
 }
 
 .header__left{
@@ -76,7 +80,4 @@ body{
     overflow-y: auto;
 }
 
-::placeholder {
-    text-align: center;
-}
-  
+

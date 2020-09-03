@@ -6,17 +6,15 @@ import { Redirect } from "react-router-dom";
 
 const ImageHelper = ({ id, size }) => {
   const useStyles = makeStyles((theme) => ({
-    root: {
-      display: "flex",
-      "& > *": {
-        margin: theme.spacing(1),
-      },
-    },
     small: {
       width: theme.spacing(3.5),
       height: theme.spacing(3.5),
       marginLeft: "17px",
       marginTop: "5px",
+    },
+    medium_small: {
+      width: theme.spacing(5),
+      height: theme.spacing(5),
     },
     medium: {
       width: theme.spacing(8),
@@ -35,6 +33,8 @@ const ImageHelper = ({ id, size }) => {
       return <Avatar src={imageURL} className={classes.small} />;
     } else if (size === "medium") {
       return <Avatar src={imageURL} className={classes.medium} />;
+    } else if (size == "medium_small") {
+      return <Avatar src={imageURL} className={classes.medium_small} />;
     } else {
       return <Avatar src={imageURL} className={classes.large} />;
     }
