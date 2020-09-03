@@ -30,3 +30,18 @@ export const getPostsByUser = (token, id) => {
       return error;
     });
 };
+
+export const getFriendPostsByUser = (token, id) => {
+  return fetch(`${API}/posts/friend/${id}`, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+    .then((response) => {
+      return response.json();
+    })
+    .catch((error) => {
+      return error;
+    });
+};

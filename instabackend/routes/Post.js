@@ -11,6 +11,7 @@ const {
   createBookmarks,
   getBookmarksByUserId,
   getFriendPosts,
+  getFriendPostForId,
   photo,
 } = require("../controller/Post");
 
@@ -19,7 +20,12 @@ router.param("postId", getPostById);
 
 router.get("/posts/:userId", isSignIn, getPostsForUserId);
 router.get("/posts/photo/:postId", photo);
-router.get("/posts/friend/:userId", isSignIn, getFriendPosts);
+router.get(
+  "/posts/friend/:userId",
+  isSignIn,
+  getFriendPostForId,
+  getFriendPosts
+);
 
 router.post("/posts/create/:userId", isSignIn, isAuthenticated, createPost);
 

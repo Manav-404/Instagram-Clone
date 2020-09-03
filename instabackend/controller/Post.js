@@ -158,26 +158,36 @@ exports.getBookmarksByUserId = (req, res) => {
   });
 };
 
-exports.getFriendPosts = (req, res) => {
+exports.getFriendPostForId = (req, res, next) => {
   const user = req.user;
   const friends = user.following;
-  const postList = [];
+  var list = [];
+  if (friends.length > 0) {
+    friends.map((friend, index) => {
+      Post.find({ user: friend._id })
+        .populate("user", "_id , username")
+        .select("-photo")
+        .exec((error, post) => {
+          if (error) {
+            return res.status(400).json({
+              error: "Error in finding posts",
+            });
+          }
 
-  friends.map((friend, index) => {
-    Post.find({ user: friend._id })
-      .populate("user", "_id , username")
-      .select("-photo")
-      .sort("-createdDate")
-      .exec((error, post) => {
-        if (error) {
-          return res.status(400).json({
-            error: "Error in finding posts",
-          });
-        }
+          if (post.length > 0) {
+            post.map((p, index) => {
+              list.push(p);
+            });
+          }
+        });
+    });
+  }
+  setTimeout(() => {
+    req.list = list;
+    next();
+  }, 1000);
+};
 
-        postList.concat(post);
-      });
-  });
-
-  return res.json(postList);
+exports.getFriendPosts = (req, res) => {
+  return res.json(req.list);
 };
