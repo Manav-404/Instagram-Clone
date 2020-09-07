@@ -8,11 +8,20 @@ import { Button } from "@material-ui/core";
 import { useEffect } from "react";
 import { isAuthenticated } from "../Authentication/helper/authenticationHelper";
 import { getFriendPostsByUser } from "../Post/helper/PostHelper";
+import { postComment } from "../Comment/helper/commentHelper";
+import { Redirect } from "react-router-dom";
 
 const Home = () => {
   const { user, token } = isAuthenticated();
 
   const [posts, setPosts] = useState([]);
+  const [comment, setComment] = useState("");
+  const [redirect, setRedirect] = useState({
+    toRedirect: false,
+    postId: "",
+  });
+
+  const { toRedirect, postId } = redirect;
 
   const getFriendsPost = () => {
     getFriendPostsByUser(token, user._id)
@@ -30,6 +39,32 @@ const Home = () => {
 
   const loadNothing = () => {
     return <h1 className="no__posts">No posts to show</h1>;
+  };
+
+  const onCommentChange = (event) => {
+    setComment(event.target.value);
+  };
+
+  const onRedirect = () => {
+    if (toRedirect == true) {
+      return <Redirect to={`/posts/comments/${postId}`} />;
+    }
+  };
+
+  const onPostComment = (post) => {
+    postComment(post._id, user._id, { comment: comment }, token)
+      .then((data) => {
+        setComment("");
+        if (data.error) {
+          console.log(data.error);
+        } else {
+          setRedirect({ ...redirect, toRedirect: true, postId: post._id });
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+        setComment("");
+      });
   };
 
   const loadPosts = () => {
@@ -51,7 +86,7 @@ const Home = () => {
               </div>
             </div>
             <div className="card__middle">
-              <PostImageHelper post={post} width={614} height={400} />
+              <PostImageHelper post={post._id} width={614} height={400} />
             </div>
             <div className="card__end">
               <div className="card__caption">
@@ -63,7 +98,7 @@ const Home = () => {
                 </div>
               </div>
               <div className="card__comments">
-                <p>View all 2000 comments</p>
+                <p>View all comments</p>
               </div>
               <section className="section">
                 <div className="card__send">
@@ -72,8 +107,11 @@ const Home = () => {
                     placeholder="ADD A COMMENT"
                     type="text"
                     autoComplete="off"
+                    onChange={onCommentChange}
+                    value={comment}
                   />
                   <Button
+                    onClick={() => onPostComment(post)}
                     style={{ color: "blue", marginLeft: 250, marginBottom: 10 }}
                   >
                     POST
@@ -82,6 +120,8 @@ const Home = () => {
               </section>
             </div>
           </div>
+          <br />
+          <br />
         </div>
       );
     });
@@ -98,6 +138,7 @@ const Home = () => {
     <div>
       <Header />
       {loadChecker()}
+      {onRedirect()}
     </div>
   );
 };

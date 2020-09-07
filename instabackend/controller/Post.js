@@ -110,21 +110,23 @@ exports.createPostComment = (req, res) => {
 };
 
 exports.getAllPostCommentsByPostId = (req, res) => {
-  Comment.find({ post: req.post._id }).exec((error, comments) => {
-    if (error) {
-      return res.status(400).json({
-        error: "Error in finding comments",
-      });
-    }
+  Comment.find({ post: req.post._id })
+    .populate("user", "_id username")
+    .exec((error, comments) => {
+      if (error) {
+        return res.status(400).json({
+          error: "Error in finding comments",
+        });
+      }
 
-    if (comments.length <= 0) {
-      return res.status(400).json({
-        error: "Looks like theres no comment on this post :)",
-      });
-    }
+      if (comments.length <= 0) {
+        return res.status(400).json({
+          error: "Looks like theres no comment on this post :)",
+        });
+      }
 
-    return res.json(comments);
-  });
+      return res.json(comments);
+    });
 };
 
 exports.createBookmarks = (req, res) => {
@@ -190,4 +192,11 @@ exports.getFriendPostForId = (req, res, next) => {
 
 exports.getFriendPosts = (req, res) => {
   return res.json(req.list);
+};
+
+exports.getPostByPostId = (req, res) => {
+  const post = req.post;
+  post.user = undefined;
+  post.photo = undefined;
+  return res.json(post);
 };

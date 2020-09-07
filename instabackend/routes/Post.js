@@ -13,12 +13,14 @@ const {
   getFriendPosts,
   getFriendPostForId,
   photo,
+  getPostByPostId,
 } = require("../controller/Post");
 
 router.param("userId", getUserById);
 router.param("postId", getPostById);
 
 router.get("/posts/:userId", isSignIn, getPostsForUserId);
+router.get("/posts/:postId", isSignIn, getPostByPostId);
 router.get("/posts/photo/:postId", photo);
 router.get(
   "/posts/friend/:userId",

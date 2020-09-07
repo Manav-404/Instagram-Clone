@@ -9,6 +9,7 @@ import Profile from "./components/Profile/Profile";
 import ProfileView from "./components/Profile/view/ProfileView";
 import PostCreate from "./components/Post/create/PostCreate";
 import Search from "./components/Profile/search/Search";
+import ViewComment from "./components/Comment/ViewComment";
 
 const Routes = () => {
   return (
@@ -22,6 +23,11 @@ const Routes = () => {
         <PrivateRoutes exact path="/profile/view/:id" component={ProfileView} />
         <PrivateRoutes exact path="/profile/search/:key" component={Search} />
         <PrivateRoutes exact path="/posts/create" component={PostCreate} />
+        <PrivateRoutes
+          exact
+          path="/posts/comments/:postId"
+          component={ViewComment}
+        />
       </Switch>
     </BrowserRouter>
   );
