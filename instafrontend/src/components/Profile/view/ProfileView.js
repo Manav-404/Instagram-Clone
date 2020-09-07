@@ -14,7 +14,10 @@ import { getProfileById, addAndNotify } from "../helper/profileHelper";
 import { Tabs, Tab } from "@material-ui/core";
 import GridOnIcon from "@material-ui/icons/GridOn";
 import BookmarkBorderIcon from "@material-ui/icons/BookmarkBorder";
-import { getPostsByUser } from "../../Post/helper/PostHelper";
+import {
+  getPostsByUser,
+  getBookmarksByUser,
+} from "../../Post/helper/PostHelper";
 import PostImageHelper from "../../Post/helper/PostImageHelper";
 
 const ProfileView = () => {
@@ -36,12 +39,14 @@ const ProfileView = () => {
   const [post, setPost] = useState([]);
   const [add, setAdd] = useState(false);
   const [isFollowing, setIsFollowing] = useState(false);
+  const [bookmark, setBookmark] = useState([]);
 
   useEffect(() => {
     getProfile();
     getPosts();
     checker();
     followChecker();
+    getBookmarks();
   }, [id]);
 
   const { username, name, bio, link, followers, following } = profile;
@@ -75,6 +80,20 @@ const ProfileView = () => {
       })
       .catch((error) => {
         setError(error);
+      });
+  };
+
+  const getBookmarks = () => {
+    getBookmarksByUser(user._id, token)
+      .then((data) => {
+        if (data.error) {
+          console.log(data.error);
+        } else {
+          setBookmark(data);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
       });
   };
 
@@ -130,8 +149,8 @@ const ProfileView = () => {
     }
   };
 
-  const loadPostBookmark = () => {
-    if (value === "one") {
+  const loadPosts = () => {
+    if (post.length > 0) {
       return (
         <div className="profile__posts">
           {post.map((p, i) => {
@@ -142,7 +161,29 @@ const ProfileView = () => {
         </div>
       );
     } else {
-      return <h1>Bookmarks</h1>;
+      return;
+    }
+  };
+
+  const loadBookmarks = () => {
+    if (bookmark.length > 0) {
+      return (
+        <div className="profile__posts">
+          {bookmark.map((p, i) => {
+            return (
+              <PostImageHelper key={i} post={p._id} width={293} height={293} />
+            );
+          })}
+        </div>
+      );
+    }
+  };
+
+  const postBookmarkChecker = () => {
+    if (value === "one") {
+      return <div>{loadPosts()}</div>;
+    } else {
+      return <div>{loadBookmarks()}</div>;
     }
   };
 
@@ -207,7 +248,7 @@ const ProfileView = () => {
             )}
           </Tabs>
         </div>
-        <div>{post.length > 0 ? loadPostBookmark() : ""}</div>
+        <div>{postBookmarkChecker()}</div>
       </div>
     );
   };

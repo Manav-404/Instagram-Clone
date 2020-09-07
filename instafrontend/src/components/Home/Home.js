@@ -7,7 +7,10 @@ import BookmarkBorderIcon from "@material-ui/icons/BookmarkBorder";
 import { Button } from "@material-ui/core";
 import { useEffect } from "react";
 import { isAuthenticated } from "../Authentication/helper/authenticationHelper";
-import { getFriendPostsByUser } from "../Post/helper/PostHelper";
+import {
+  getFriendPostsByUser,
+  createBookmark,
+} from "../Post/helper/PostHelper";
 import { postComment } from "../Comment/helper/commentHelper";
 import { Redirect } from "react-router-dom";
 
@@ -20,6 +23,8 @@ const Home = () => {
     toRedirect: false,
     postId: "",
   });
+  const [bookmark, setBookmark] = useState("");
+  const [redirectToProfile, setRedirectToProfile] = useState(false);
 
   const { toRedirect, postId } = redirect;
 
@@ -67,6 +72,26 @@ const Home = () => {
       });
   };
 
+  const profileRedirect = () => {
+    if (redirectToProfile === true) {
+      return <Redirect to={`/profile/view/${user._id}`} />;
+    }
+  };
+
+  const addToBookmark = () => {
+    if (bookmark !== "") {
+      createBookmark(bookmark, user._id, token)
+        .then((data) => {
+          if (data) {
+            setRedirectToProfile(true);
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  };
+
   const loadPosts = () => {
     return posts.map((post, index) => {
       return (
@@ -82,7 +107,7 @@ const Home = () => {
                 </div>
               </div>
               <div className="bookmark">
-                <BookmarkBorderIcon />
+                <BookmarkBorderIcon onClick={() => setBookmark(post._id)} />
               </div>
             </div>
             <div className="card__middle">
@@ -139,6 +164,8 @@ const Home = () => {
       <Header />
       {loadChecker()}
       {onRedirect()}
+      {profileRedirect()}
+      {addToBookmark()}
     </div>
   );
 };

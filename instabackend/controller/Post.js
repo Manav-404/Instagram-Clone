@@ -143,21 +143,42 @@ exports.createBookmarks = (req, res) => {
         });
       }
 
-      return res.json(document);
+      const { _id, username, bookmarks } = document;
+
+      return res.json({ _id, username, bookmarks });
     }
   );
 };
 
-exports.getBookmarksByUserId = (req, res) => {
+exports.getBookmarksByUserId = (req, res, next) => {
   let bookmarks = req.user.bookmarks;
-  bookmarks.map((bookmark) => {
-    let _id = bookmark._id;
-    Post.findById(_id)
-      .populate("user", "_id  name")
-      .exec((err, post) => {
-        return res.json(post);
-      });
-  });
+  let posts = [];
+  if (bookmarks.length > 0) {
+    bookmarks.map((bookmark) => {
+      let _id = bookmark._id;
+      Post.findById(_id)
+        .populate("user", "_id  name")
+        .select("-photo")
+        .exec((err, post) => {
+          if (err) {
+            return res.status(400).json({
+              error: "Error in finding posts",
+            });
+          }
+          posts.push(post);
+        });
+    });
+  }
+
+  setTimeout(() => {
+    req.bookmarksList = posts;
+    next();
+  }, 1000);
+};
+
+exports.getBookmarks = (req, res) => {
+  const bookmarks = req.bookmarksList;
+  return res.json(bookmarks);
 };
 
 exports.getFriendPostForId = (req, res, next) => {

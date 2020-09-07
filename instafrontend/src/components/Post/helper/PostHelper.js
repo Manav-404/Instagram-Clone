@@ -60,3 +60,33 @@ export const getFriendPostsByUser = (token, id) => {
       return error;
     });
 };
+
+export const createBookmark = (postId, userId, token) => {
+  return fetch(`${API}/posts/bookmark/${postId}/${userId}`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+    .then((response) => {
+      return response.json();
+    })
+    .catch((error) => {
+      return error;
+    });
+};
+
+export const getBookmarksByUser = (userId, token) => {
+  return fetch(`${API}/posts/bookmark/${userId}`, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+    .then((response) => {
+      return response.json();
+    })
+    .catch((error) => {
+      return error;
+    });
+};

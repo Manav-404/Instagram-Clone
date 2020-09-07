@@ -14,6 +14,7 @@ const {
   getFriendPostForId,
   photo,
   getPostByPostId,
+  getBookmarks,
 } = require("../controller/Post");
 
 router.param("userId", getUserById);
@@ -51,7 +52,8 @@ router.get(
   "/posts/bookmark/:userId",
   isSignIn,
   isAuthenticated,
-  getBookmarksByUserId
+  getBookmarksByUserId,
+  getBookmarks
 );
 
 module.exports = router;
