@@ -217,9 +217,7 @@ const ProfileView = () => {
           <div className="profile__bio">
             <h3 className="name">{name}</h3>
             <p>{bio}</p>
-            <Link to="https://github.com/Manav-404">
-              <h3>{link}</h3>
-            </Link>
+    <a href={link}> {link}</a>
           </div>
         </div>
       </div>
